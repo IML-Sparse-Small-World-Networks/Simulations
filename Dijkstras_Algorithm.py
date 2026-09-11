@@ -27,8 +27,6 @@ def dijkstra(graph, graph_vertices, n):
             if graph[u][v] != 0 and not visited[v]:
                 alt = distances[u] + graph[u][v]
                 if alt < distances[v]:
-                    if u == 'None':
-                        print("aaaaaaaaa")
                     distances[v] = alt
                     predecessors[v] = u
 
