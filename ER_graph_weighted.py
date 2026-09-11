@@ -34,18 +34,18 @@ def main():
                     A[i, j] = 1
                     A[j, i] = 1
                     shortcuts.append((i, j))
-        # weights
-        rate = 1.0  # lambda
-        scale = 1 / rate
+    # weights
+    rate = 1.0  # lambda
+    scale = 1 / rate
 
-        W = np.zeros((n, n), dtype=float)
+    W = np.zeros((n, n), dtype=float)
 
-        for i in range(n):
-            for j in range(i + 1, n):
-                if A[i, j] == 1:
-                    weight = r.exponential(scale=scale)
-                    W[i, j] = weight
-                    W[j, i] = weight
+    for i in range(n):
+        for j in range(i + 1, n):
+            if A[i, j] == 1:
+                weight = r.exponential(scale=scale)
+                W[i, j] = weight
+                W[j, i] = weight
 
     print("Number of vertices:", n)
     print("Shortcut probability:", p)
@@ -84,11 +84,16 @@ def main():
     end_vertex = n//2
     distances, predecessors = Dijkstras.dijkstra(W, graph_vertices, n)
 
-    path = Dijkstras.get_path(
+    path, path_weights = Dijkstras.get_path(
+        W,
         predecessors,
         start_vertex,
         end_vertex
     )
+
+    print("Vertex path:", path)
+    print("Path weights list:", path_weights)
+    print("Total weights:", sum(path_weights))
 
 
     edges = []

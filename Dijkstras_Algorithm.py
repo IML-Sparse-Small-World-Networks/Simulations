@@ -27,20 +27,31 @@ def dijkstra(graph, graph_vertices, n):
             if graph[u][v] != 0 and not visited[v]:
                 alt = distances[u] + graph[u][v]
                 if alt < distances[v]:
+                    if u == 'None':
+                        print("aaaaaaaaa")
                     distances[v] = alt
                     predecessors[v] = u
 
     return distances, predecessors
 
-def get_path(predecessors, start_vertex, end_vertex):
+def get_path(graph, predecessors, start_vertex, end_vertex):
     path = []
     current = end_vertex
 
-    while current is not None:
+    while current != start_vertex:
         path.insert(0, current)
 
-        if current == start_vertex:
-            return path
-
         current = predecessors[current]
-    return []
+
+    if current == None:
+        return [], []
+
+    weights = []
+
+    for i in range(len(path) - 1):
+        u = path[i]
+        v = path[i + 1]
+        weights.append(graph[u][v])
+
+    return path, weights
+
