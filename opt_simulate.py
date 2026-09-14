@@ -13,10 +13,10 @@ def _run_one(args):
     return ER_graph.run_trial(trial, n, l, p, start_vertex, end_vertex) 
 
 def main():
-    n = 10          # number of vertices
+    n = 1000          # number of vertices
     l = n / 10      # shortcut neighbor range
     p = 0.7         # probability of a shortcut
-    num_trials = 1000  # 1 thousand trials, e.g.
+    num_trials = 100  # 1 thousand trials, e.g.
     start_vertex, end_vertex = 0, n // 2
  
     jobs = [(i, n, l, p, start_vertex, end_vertex) for i in range(num_trials)]
