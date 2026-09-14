@@ -2,18 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 from networkx import from_numpy_array, predecessor
+import secrets
 
 import Dijkstras_Algorithm as Dijkstras
 
 def main():
     # parameters
-    n = 100
+    n = 500
     l = n/10
     alpha = 3
     p = alpha/n
 
     # random graph
-    r = np.random.default_rng(seed=123)
+    limit = 2**10000
+    random_seed = secrets.randbelow(limit)
+    r = np.random.default_rng(seed=random_seed)
     A = np.zeros((n, n), dtype=int)
 
     for  i in range(n):
