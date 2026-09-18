@@ -8,10 +8,11 @@ from datetime import datetime
 
 def main():
     # parameters
-    n = 100
-    l = n/2
-    alpha = 3
+    n = 1000
+    l = n/10
+    alpha = 10
     p = alpha/n
+
 
     now = datetime.now().second
 
@@ -42,7 +43,7 @@ def main():
     scale = 1 / rate
 
     W = np.zeros((n, n), dtype=float)
-    mu = 3
+    mu = l**2 * alpha/(2*n)
 
     for i in range(n):
         for j in range(i + 1, n):
@@ -80,7 +81,7 @@ def main():
     nx.draw_networkx_nodes(G,pos,node_size=40)
 
     # original edges
-    nx.draw_networkx_edges(G,pos,edgelist=cycle_edges,edge_color="steelblue",width=0.1)
+    nx.draw_networkx_edges(G,pos,edgelist=cycle_edges,edge_color="steelblue",width=0.05)
     # shortcut edges
     nx.draw_networkx_edges(G,pos,edgelist=shortcuts,edge_color="red",style="dashed",width=0.1,alpha=0.6)
 
@@ -111,11 +112,13 @@ def main():
     edges = []
     for i in range(len(path)-1):
         edges.append((path[i], path[i+1]))
-        if (abs(path[i] > path[i+1]) > 1):
+        if (abs(path[i] - path[i+1]) > 1):
             shortcut_edges += 1
+
+    print("len path:", len(path))
     print("num shortcut edges: ", shortcut_edges)
 
-    nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color="green", width=1, alpha=0.6)
+    nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color="green", width=10, alpha=0.6)
     plt.title(
         f"Small-World Network: n={n}, l={l}, α={alpha}"
     )
