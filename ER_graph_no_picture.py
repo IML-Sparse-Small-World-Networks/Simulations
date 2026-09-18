@@ -106,7 +106,7 @@ def main():
 
     print("len path:", len(path))
     print("num shortcut edges: ", shortcut_edges)
-    data = [n, p, len(shortcuts), sum(path_weights), len(path), shortcut_edges]
+    data = [n, l, p, len(shortcuts), sum(path_weights), len(path), shortcut_edges]
     with open('data.csv', 'a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         
