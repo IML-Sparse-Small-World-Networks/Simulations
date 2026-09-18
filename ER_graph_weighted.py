@@ -10,7 +10,7 @@ def main():
     # parameters
     n = 1000
     l = n/10
-    alpha = 10
+    alpha = 5
     p = alpha/n
 
 
@@ -43,7 +43,7 @@ def main():
     scale = 1 / rate
 
     W = np.zeros((n, n), dtype=float)
-    mu = l**2 * alpha/(2*n)
+    mu = l**2 * alpha/(n)
 
     for i in range(n):
         for j in range(i + 1, n):
