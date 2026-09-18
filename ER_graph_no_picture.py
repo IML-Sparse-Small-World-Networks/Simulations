@@ -1,4 +1,5 @@
 import numpy as np
+import csv
 import matplotlib.pyplot as plt
 
 import Dijkstras_Algorithm as Dijkstras
@@ -61,7 +62,7 @@ def main():
     print("Shortcut probability:", p)
     print("Number of shortcut edges:", len(shortcuts))
     #print("Shortcut edges:", shortcuts)
-    print("Adjacency matrix:")
+    #print("Adjacency matrix:")
     #print(A)
 
     # drawing graph with network
@@ -105,7 +106,11 @@ def main():
 
     print("len path:", len(path))
     print("num shortcut edges: ", shortcut_edges)
-
+    data = [n, p, len(shortcuts), sum(path_weights), len(path), shortcut_edges]
+    with open('data.csv', 'a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        
+        writer.writerow(data)
 
 if __name__ == "__main__":
     main()
