@@ -2,21 +2,21 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 from networkx import from_numpy_array, predecessor
-import secrets
 
 import Dijkstras_Algorithm as Dijkstras
+from datetime import datetime
 
 def main():
     # parameters
-    n = 500
-    l = n/10
+    n = 100
+    l = n/2
     alpha = 3
     p = alpha/n
 
+    now = datetime.now().second
+
     # random graph
-    limit = 2**10000
-    random_seed = secrets.randbelow(limit)
-    r = np.random.default_rng(seed=random_seed)
+    r = np.random.default_rng(seed=now)
     A = np.zeros((n, n), dtype=int)
 
     for  i in range(n):
@@ -42,13 +42,21 @@ def main():
     scale = 1 / rate
 
     W = np.zeros((n, n), dtype=float)
+    mu = 3
 
     for i in range(n):
         for j in range(i + 1, n):
             if A[i, j] == 1:
-                weight = r.exponential(scale=scale)
+                is_neighbor = (j == i + 1) or (i == 0 and j == n - 1)
+
+                if is_neighbor:
+                    weight = r.exponential(scale=scale)
+                else:
+                    weight = mu * r.exponential(scale=scale)
+
                 W[i, j] = weight
                 W[j, i] = weight
+
 
     print("Number of vertices:", n)
     print("Shortcut probability:", p)
@@ -72,9 +80,9 @@ def main():
     nx.draw_networkx_nodes(G,pos,node_size=40)
 
     # original edges
-    nx.draw_networkx_edges(G,pos,edgelist=cycle_edges,edge_color="steelblue",width=0.5)
+    nx.draw_networkx_edges(G,pos,edgelist=cycle_edges,edge_color="steelblue",width=0.1)
     # shortcut edges
-    nx.draw_networkx_edges(G,pos,edgelist=shortcuts,edge_color="red",style="dashed",width=2,alpha=0.6)
+    nx.draw_networkx_edges(G,pos,edgelist=shortcuts,edge_color="red",style="dashed",width=0.1,alpha=0.6)
 
 
 
@@ -103,7 +111,7 @@ def main():
     for i in range(len(path)-1):
         edges.append((path[i], path[i+1]))
 
-    nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color="green", width=5, alpha=0.6)
+    nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color="green", width=1, alpha=0.6)
     plt.title(
         f"Small-World Network: n={n}, l={l}, α={alpha}"
     )
