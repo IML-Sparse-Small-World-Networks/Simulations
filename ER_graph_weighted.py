@@ -107,9 +107,13 @@ def main():
     print("Total weights:", sum(path_weights))
 
 
+    shortcut_edges = 0
     edges = []
     for i in range(len(path)-1):
         edges.append((path[i], path[i+1]))
+        if (abs(path[i] > path[i+1]) > 1):
+            shortcut_edges += 1
+    print("num shortcut edges: ", shortcut_edges)
 
     nx.draw_networkx_edges(G, pos, edgelist=edges, edge_color="green", width=1, alpha=0.6)
     plt.title(
