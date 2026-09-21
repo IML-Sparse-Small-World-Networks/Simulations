@@ -18,8 +18,9 @@ with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         labels = ['average_path_len', 'average_shortcuts']
         numbers = [average_path_len, average_shortcuts]
         plt.bar(labels, numbers, color=['skyblue', 'salmon'])
-        plt.title('Bar Graph with Three Numbers')
-        plt.xlabel('mu = (l * alpha) / n')
+        #plt.title('')
+        plt.title(mu1[0])
+        # plt.xlabel('mu = (l * alpha) / n')
         plt.ylabel('Values')
         plt.savefig("mu1")
         
@@ -35,8 +36,9 @@ with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         labels = ['average_path_len', 'average_shortcuts']
         numbers = [average_path_len, average_shortcuts]
         plt.bar(labels, numbers, color=['skyblue', 'salmon'])
-        plt.title('Bar Graph with Three Numbers')
-        plt.xlabel('mu = (l * alpha) / n')
+        #plt.title('')
+        plt.title(mu2[0])
+        #plt.xlabel('mu = (l * alpha) / n')
         plt.ylabel('Values')
         plt.savefig("mu2")
         
