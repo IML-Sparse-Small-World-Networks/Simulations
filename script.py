@@ -9,24 +9,23 @@ average_shortcuts = 0
 with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         header = next(reader) 
-
-
-        
         mu1 = next(reader)
         for i in range(100):
                 row=next(reader)
-                average_path_len += int(row[5])
+                average_path_len = int(row[5])
                 average_shortcuts += int(row[6])
+
         labels = ['average_path_len', 'average_shortcuts']
         numbers = [average_path_len, average_shortcuts]
         plt.bar(labels, numbers, color=['skyblue', 'salmon'])
-
         plt.title('Bar Graph with Three Numbers')
         plt.xlabel('mu = (l * alpha) / n')
         plt.ylabel('Values')
         plt.savefig("mu1")
         
         ######################## second mu ############################
+        average_path_len = 0
+        average_shortcuts = 0
         mu2 = next(reader)
         for i in range(100):
                         row=next(reader)
@@ -36,7 +35,6 @@ with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         labels = ['average_path_len', 'average_shortcuts']
         numbers = [average_path_len, average_shortcuts]
         plt.bar(labels, numbers, color=['skyblue', 'salmon'])
-
         plt.title('Bar Graph with Three Numbers')
         plt.xlabel('mu = (l * alpha) / n')
         plt.ylabel('Values')
