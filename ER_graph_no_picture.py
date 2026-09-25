@@ -126,8 +126,8 @@ if __name__ == "__main__":
     
     n_ = 1000                            # number of vertices
     l_ = n_/10                            # shortcut range
-    p_ = 5/n_                             # probability of shortcut Binom dist
     lambda__ = 10                        # new lambda var for alpha
+    p_ = lambda__/(2*l - 2)                  # probability of shortcut Binom dist
     alpha_1 = (l_ * lambda__)/(2*l_-2)      # shortcut constant multiplier passed directly to main function
     alpha_2 = (l_**2 * lambda__)/(2*l_-2)   # second alpha
 
