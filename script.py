@@ -1,19 +1,21 @@
 import csv
 import pandas as pd
 import matplotlib.pyplot as plt
+import subprocess
 
 n = 1000
 average_path_len = 0
 average_shortcuts = 0
 
+
 with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         header = next(reader) 
         mu1 = next(reader)
-        for i in range(100):
+        for i in range(10):
                 row=next(reader)
-                average_path_len = int(row[5])
-                average_shortcuts += int(row[6])
+                average_path_len = int(row[7])
+                average_shortcuts += int(row[8])
 
         labels = ['average_path_len', 'average_shortcuts']
         numbers = [average_path_len, average_shortcuts]
@@ -22,16 +24,16 @@ with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         plt.title(mu1[0])
         # plt.xlabel('mu = (l * alpha) / n')
         plt.ylabel('Values')
-        plt.savefig("mu1")
+        plt.savefig("alpha_1")
         
         ######################## second mu ############################
         average_path_len = 0
         average_shortcuts = 0
         mu2 = next(reader)
-        for i in range(100):
+        for i in range(10):
                         row=next(reader)
-                        average_path_len += int(row[5])
-                        average_shortcuts += int(row[6])
+                        average_path_len += int(row[7])
+                        average_shortcuts += int(row[8])
 
         labels = ['average_path_len', 'average_shortcuts']
         numbers = [average_path_len, average_shortcuts]
@@ -40,7 +42,7 @@ with open('data.csv', mode='r', newline='', encoding='utf-8') as file:
         plt.title(mu2[0])
         #plt.xlabel('mu = (l * alpha) / n')
         plt.ylabel('Values')
-        plt.savefig("mu2")
+        plt.savefig("alpha_2")
         
                          
 
