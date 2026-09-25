@@ -115,6 +115,15 @@ def main(n_, l_, p_, lambda__, alpha_):
         writer.writerow(data)
 
 if __name__ == "__main__":
+    '''
+    Standarized the variables with "_" suffix to pass to main() function
+    Two for loops. One for l and one for l**2
+    Automatically outputs data to 'data.csv'
+    Run 'script.py' to generate bar graphs
+    If you change the '10' in the for loops below, change 
+                    the '10' in the script.py for loops as well
+    '''
+    
     n_ = 1000                            # number of vertices
     l_ = n_/10                            # shortcut range
     p_ = 5/n_                             # probability of shortcut Binom dist
