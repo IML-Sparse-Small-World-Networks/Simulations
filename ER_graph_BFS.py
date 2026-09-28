@@ -1,9 +1,9 @@
 import numpy as np
 import csv
 import matplotlib.pyplot as plt
+import networkx as nx
 
-import Dijkstras_Algorithm as Dijkstras
-from datetime import datetime
+import BFS as BFS
 
 def main(n_, l_, p_, lambda__, alpha_):
     # parameters
@@ -15,8 +15,9 @@ def main(n_, l_, p_, lambda__, alpha_):
     alpha = alpha_                      # shortcut constant multiplier passed directly to main function
 
     # random graph
-    now = datetime.now().second
-    r = np.random.default_rng(seed=now)
+    rng = np.random.default_rng()
+    random_num = rng.integers(1, 5001)
+    r = np.random.default_rng(seed=random_num)
     A = np.zeros((n, n), dtype=int)
 
     for  i in range(n):
@@ -61,13 +62,24 @@ def main(n_, l_, p_, lambda__, alpha_):
     print("Number of vertices:", n)
     print("Shortcut probability:", p)
     print("Number of shortcut edges:", len(shortcuts))
-    #print("Shortcut edges:", shortcuts)
-    #print("Adjacency matrix:")
-    #print(A)
 
     # drawing graph with network
 
+    G = nx.Graph()
+    edge_list = BFS.bfs(A, n, 0)
+    G.add_edges_from(edge_list)
+    bfs_tree = nx.bfs_tree(G, source=0)
+    pos = nx.drawing.layout.bfs_layout(G, start=0)
+    plt.figure(figsize=(7, 7))
+    nx.draw(bfs_tree, pos, with_labels=True, node_size=300, node_color="lightblue", font_size=12, font_weight="bold", arrows=True)
+    plt.title("BFS Tree Visualization")
+    plt.savefig("bfs_tree.png", dpi=300, bbox_inches="tight")
 
+    
+
+    
+
+    '''
     cycle_edges = []
     for i in range(n):
         cycle_edges.append((i, (i+1)%n))
@@ -79,19 +91,7 @@ def main(n_, l_, p_, lambda__, alpha_):
     graph_vertices = []
     for i in range(n):
         graph_vertices.append(i)
-
-
-    start_vertex = 0
-    end_vertex = n//2
-    distances, predecessors = Dijkstras.dijkstra(W, graph_vertices, n)
-
-    path, path_weights = Dijkstras.get_path(
-        W,
-        predecessors,
-        start_vertex,
-        end_vertex
-    )
-
+        
     print("Vertex path:", path)
     #print("Path weights list:", path_weights)
     print("Total weights:", sum(path_weights))
@@ -106,12 +106,14 @@ def main(n_, l_, p_, lambda__, alpha_):
 
     print("len path:", len(path))
     print("num shortcut edges: ", shortcut_edges)
+    
 
     # record trial data
     data = [n, l, p, lambda_, alpha, len(shortcuts), sum(path_weights), len(path), shortcut_edges]
     with open('data.csv', 'a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(data)
+    '''
 
 if __name__ == "__main__":
     '''
@@ -123,17 +125,20 @@ if __name__ == "__main__":
                     the '10' in the script.py for loops as well
     '''
     
-    n_ = 1000                            # number of vertices
-    l_ = n_/10                            # shortcut range
-    lambda__ = 10                        # new lambda var for alpha
-    p_ = lambda__/(2*l - 2)                  # probability of shortcut Binom dist
-    #alpha_1 = (l_ * lambda__)/(2*l_-2)      # shortcut constant multiplier passed directly to main function
-    #alpha_2 = (l_**2 * lambda__)/(2*l_-2)   # second alpha
-    alpha_1 = 1
+    n_ = 50                               # number of vertices
+    l_ = int(n_/10)                              # shortcut range
+    lambda__ = 10                           # new lambda var for alpha
+    p_ = lambda__/(2*l_ - 2)                 # probability of shortcut Binom dist    
+    alpha_1 = 1                             # shortcut constant multipliers passed directly to main function
+    main(n_, l_, p_, lambda__, alpha_1)
+
+
+    '''
     alpha_2 = l_
     alpha_3 = l_**2
 
-    with open('data.csv', mode='w', newline='', encoding='utf-8') as file:
+
+    with open('data1.csv', mode='w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(["n","l","p","lambda","alpha","shortcuts","path_weight","len_path","shortcuts_taken",])
             writer.writerow([f"alpha = {alpha_1}", "", "", "", "", "", "", "", ""])
@@ -143,7 +148,7 @@ if __name__ == "__main__":
         print(f"Starting run {i + 1}...")
         main(n_, l_, p_, lambda__, alpha_1)
     
-    with open('data.csv', mode='a', newline='', encoding='utf-8') as file:
+    with open('data2.csv', mode='a', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow([f"alpha = {alpha_2}", "", "", "", "", "", "", "", ""])
 
@@ -152,11 +157,16 @@ if __name__ == "__main__":
         print(f"Starting run {i + 1}...")
         main(n_, l_, p_, lambda__, alpha_2)
 
+    with open('data3.csv', mode='a', newline='', encoding='utf-8') as file:
+                writer = csv.writer(file)
+                writer.writerow([f"alpha = {alpha_2}", "", "", "", "", "", "", "", ""])
+    
+
     print("Starting alpha = l**2 ...")
     for i in range(10):
         print(f"Starting run {i + 1}...")
         main(n_, l_, p_, lambda__, alpha_3)
     
     print("finished!")
-
+    '''
     
