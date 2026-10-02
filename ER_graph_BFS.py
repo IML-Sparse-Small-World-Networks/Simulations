@@ -1,119 +1,48 @@
 import numpy as np
 import csv
-import matplotlib.pyplot as plt
-import networkx as nx
+import math
 
 import BFS as BFS
+import script as script
 
-def main(n_, l_, p_, lambda__, alpha_):
+def main(n_, l_, p_, lambda__, alpha_, mu_, l_i):
     # parameters
-    
     n = n_                              # number of vertices
     l = l_                              # shortcut range
     p = p_                              # probability of shortcut Binom dist
     lambda_ = lambda__                  # new lambda var for alpha
     alpha = alpha_                      # shortcut constant multiplier passed directly to main function
+    mu = mu_                            # eigenvalue of growth matrix
 
     # random graph
     rng = np.random.default_rng()
-    random_num = rng.integers(1, 5001)
-    r = np.random.default_rng(seed=random_num)
-    A = np.zeros((n, n), dtype=int)
-
-    for  i in range(n):
-        j = (i + 1) % n                 # underlying cycle
-        A[i, j] = 1
-        A[j, i] = 1
-
-    # generating shortcuts
-
-    shortcuts = []
-
+    rng = np.random.default_rng()
+    adj = [[(i + 1) % n, (i - 1) % n] for i in range(n)]
+    offsets = np.arange(2, int(l) + 1)
     for i in range(n):
-        for j in range(i+1, n): # j > i
-            distance = min((j-i), n - (j-i))
+        hits = offsets[rng.random(len(offsets)) < p]
+        for d in hits:
+            j = (i + d) % n
+            adj[i].append(j)
+            adj[j].append(i)
 
-            if (2 <= distance <= l):
-                if r.random() < p:
-                    A[i, j] = 1
-                    A[j, i] = 1
-                    shortcuts.append((i, j))
+    depth, discovered = BFS.bfs(adj, 0)
 
     # weights
-    rate = 1.0  # lambda
-    scale = 1 / rate
 
-    W = np.zeros((n, n), dtype=float)
+    # run BFS
+    #edge_list, shortcut_list, cycle_list, t = BFS.bfs(A, n, 0)
 
-    for i in range(n):
-        for j in range(i + 1, n):
-            if A[i, j] == 1:
-                is_neighbor = (j == i + 1) or (i == 0 and j == n - 1)
-
-                if is_neighbor:
-                    weight = r.exponential(scale=scale)
-                else:
-                    weight = alpha * r.exponential(scale=scale)
-
-                W[i, j] = weight
-                W[j, i] = weight
-
-
-    print("Number of vertices:", n)
-    print("Shortcut probability:", p)
-    print("Number of shortcut edges:", len(shortcuts))
-
-    # drawing graph with network
-
-    G = nx.Graph()
-    edge_list = BFS.bfs(A, n, 0)
-    G.add_edges_from(edge_list)
-    bfs_tree = nx.bfs_tree(G, source=0)
-    pos = nx.drawing.layout.bfs_layout(G, start=0)
-    plt.figure(figsize=(7, 7))
-    nx.draw(bfs_tree, pos, with_labels=True, node_size=300, node_color="lightblue", font_size=12, font_weight="bold", arrows=True)
-    plt.title("BFS Tree Visualization")
-    plt.savefig("bfs_tree.png", dpi=300, bbox_inches="tight")
-
-    
-
-    
-
-    '''
-    cycle_edges = []
-    for i in range(n):
-        cycle_edges.append((i, (i+1)%n))
-
-
-    #plt.figure(figsize=(10, 10))
-
-
-    graph_vertices = []
-    for i in range(n):
-        graph_vertices.append(i)
-        
-    print("Vertex path:", path)
-    #print("Path weights list:", path_weights)
-    print("Total weights:", sum(path_weights))
-
-
-    shortcut_edges = 0
-    edges = []
-    for i in range(len(path)-1):
-        edges.append((path[i], path[i+1]))
-        if (abs(path[i] - path[i+1]) > 1):
-            shortcut_edges += 1
-
-    print("len path:", len(path))
-    print("num shortcut edges: ", shortcut_edges)
-    
+    edge_list = []
+    shortcut_list = []
+    cycle_list = []
 
     # record trial data
-    data = [n, l, p, lambda_, alpha, len(shortcuts), sum(path_weights), len(path), shortcut_edges]
-    with open('data.csv', 'a', newline='', encoding='utf-8') as file:
+    data = [n, l, p, lambda_, alpha, len(edge_list), len(shortcut_list), len(cycle_list), depth, mu]
+    with open(f"bfs_data_{l_i}.csv", 'a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
         writer.writerow(data)
-    '''
+    
 
 if __name__ == "__main__":
     '''
@@ -125,48 +54,139 @@ if __name__ == "__main__":
                     the '10' in the script.py for loops as well
     '''
     
-    n_ = 50                               # number of vertices
-    l_ = int(n_/10)                              # shortcut range
-    lambda__ = 10                           # new lambda var for alpha
-    p_ = lambda__/(2*l_ - 2)                 # probability of shortcut Binom dist    
-    alpha_1 = 1                             # shortcut constant multipliers passed directly to main function
-    main(n_, l_, p_, lambda__, alpha_1)
+    n_ = 5000                                   # number of vertices
+    l_1 = 10                                    # shortcut range
+    l_2 = int(n_ / math.log(n_))
+    l_3 = math.sqrt(n_)
+    # alpha_[alpha_num_l-num]
+    alpha_1_1 = 1                               # shortcut constant multipliers passed directly to main function
+    alpha_2_1 = l_1
+    alpha_3_1 = l_1**2
+    alpha_1_2 = 1
+    alpha_2_2 = l_2
+    alpha_3_2 = l_2**2
+    alpha_1_3 = 1
+    alpha_2_3 = l_2
+    alpha_3_3 = l_2**2
+    lambda__ = 2                               # new lambda var for alpha
+    p_1 = lambda__/(2*l_1 - 2)                  # probability of shortcut Binom dist   
+    p_2 = lambda__/(2*l_2 - 2)                  # probability of shortcut Binom dist   
+    p_3 = lambda__/(2*l_3 - 2)                  # probability of shortcut Binom dist   
+    mu_ = 1 + lambda__ + math.sqrt((lambda__**2) + (6 * lambda__) + 1)          # eigenvalue of growth matrix
+    num_trials =  20                        # number trials
 
-
-    '''
-    alpha_2 = l_
-    alpha_3 = l_**2
-
-
-    with open('data1.csv', mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow(["n","l","p","lambda","alpha","shortcuts","path_weight","len_path","shortcuts_taken",])
-            writer.writerow([f"alpha = {alpha_1}", "", "", "", "", "", "", "", ""])
+    ######################## l_1 ############################
+    with open('bfs_data_l_1.csv', mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_1", "alpha_1_1", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_1, alpha_1_1, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
 
     print("Starting alpha = 1 ...")
-    for i in range(10):
-        print(f"Starting run {i + 1}...")
-        main(n_, l_, p_, lambda__, alpha_1)
     
-    with open('data2.csv', mode='a', newline='', encoding='utf-8') as file:
-            writer = csv.writer(file)
-            writer.writerow([f"alpha = {alpha_2}", "", "", "", "", "", "", "", ""])
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_1, p_1, lambda__, alpha_1_1, mu_, "l_1")
+
+    '''
+    with open('bfs_data_l_1.csv', mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_1", "alpha_2_1", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_1, alpha_2_1, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+    
+    print("Starting alpha = l ...")
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_1, p_1, lambda__, alpha_2_1, mu_, "l_1")
+
+    with open('bfs_data_l_1.csv', mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_1", "alpha_3_1", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_1, alpha_3_1, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+    
+    print("Starting alpha = l**2 ...")
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_1, p_1, lambda__, alpha_3_1, mu_, "l_1")
+    '''
+
+    ######################## l_2 ############################
+    with open('bfs_data_l_2.csv', mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_2", "alpha_1_2", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_1, alpha_1_2, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+
+    print("Starting alpha = 1 ...")
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_2, p_2, lambda__, alpha_1_2, mu_, "l_2")
+
+    '''
+    with open('bfs_data_l_2.csv', mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_2", "alpha_2_2", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_2, alpha_2_2, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
 
     print("Starting alpha = l ...")
-    for i in range(10):
-        print(f"Starting run {i + 1}...")
-        main(n_, l_, p_, lambda__, alpha_2)
-
-    with open('data3.csv', mode='a', newline='', encoding='utf-8') as file:
-                writer = csv.writer(file)
-                writer.writerow([f"alpha = {alpha_2}", "", "", "", "", "", "", "", ""])
     
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_2, p_2, lambda__, alpha_2_2, mu_, "l_2")
 
+    with open('bfs_data_l_2.csv', mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_2", "alpha_3_2", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_2, alpha_3_2, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+    
     print("Starting alpha = l**2 ...")
-    for i in range(10):
+    for i in range(num_trials):
         print(f"Starting run {i + 1}...")
-        main(n_, l_, p_, lambda__, alpha_3)
-    
-    print("finished!")
+        main(n_, l_2, p_2, lambda__, alpha_3_2, mu_, "l_2")
     '''
+
+    ######################## l_3 ############################
+    with open('bfs_data_l_3.csv', mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_3", "alpha_1_3", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_3, alpha_1_3, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+    
+    print("Starting alpha = 1 ...")
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_3, p_3, lambda__, alpha_1_3, mu_, "l_3")
+
+    '''
+    with open('bfs_data_l_3.csv', mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_3", "alpha_2_3", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_3, alpha_2_3, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+
+    print("Starting alpha = l ...")
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_3, p_3, lambda__, alpha_2_3, mu_, "l_3")
+
+    with open('bfs_data_l_3.csv', mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        writer.writerow(["l_3", "alpha_3_3", "mu_", "", "", "", "", "", "", ""])
+        writer.writerow([l_3, alpha_3_3, mu_, "", "", "", "", "", "", "", ""])
+        writer.writerow(["n","l","p","lambda","alpha","num_edges","num_shortcuts","num_cycle_edges","time","mu"])
+    
+    print("Starting alpha = l**2 ...")
+    for i in range(num_trials):
+        print(f"Starting run {i + 1}...")
+        main(n_, l_3, p_3, lambda__, alpha_3_3, mu_, "l_3")
+    '''
+
+
+    print("Generating bar graphs ...")
+    script.main(num_trials, n_)
+    print("finished!")
     
