@@ -11,9 +11,9 @@ import numpy as np
 
 
 n = 10000
-l = 1000
-shortcut_lambda = 10.0
-k = 4
+l = 100
+shortcut_lambda = 100
+k = 5
 source = 0
 seed = 12
 output = Path("reachability_output")
@@ -91,7 +91,6 @@ def expand_layers(adjacency, source, k):
 
 
 def reachable_edges(adjacency, depth, parent):
-    """已到达节点之间的所有边，每条无向边只返回一次（包括同层边）。"""
     for u, neighbors in enumerate(adjacency):
         if depth[u] < 0:
             continue
