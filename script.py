@@ -1,150 +1,70 @@
 import csv
+import math
+from collections import defaultdict
+import matplotlib.pyplot as plt
+
+def main(mu_, lambda__):
+    times = defaultdict(list)
+    ls = {}
+    with open("bfs_data_.csv", newline='', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        next(reader)                              # header
+        for n, l, t in reader:
+            times[int(n)].append(int(t))
+            ls[int(n)] = float(l)
+
+    ns = sorted(times)
+    sample = [(sum(times[n]) / len(times[n])) / math.log(ls[n]) for n in ns]
+    expected = 1 / (2 * math.log(mu_))
+
+    plt.plot(ns, sample, 'o-', label='mean depth / log(l)')
+    plt.axhline(expected, color='salmon', linestyle='--', label='1 / (2 log mu)')
+    plt.xlabel('n')
+    plt.ylabel('time / log(l)')
+    plt.title('Average Time First Cycle | mu = ' + str(mu_) + ' | lambda = ' + str(lambda__))
+    plt.legend()
+    plt.savefig("first_cycle_time_mu=" + str(lambda__) )
+    plt.clf()
+
+
+'''   
+
+import csv
 import matplotlib.pyplot as plt
 import math
 
-def main(num_trials_, n_):
-        num_trials = num_trials_
-        with open('bfs_data_l_1.csv', mode='r', newline='', encoding='utf-8') as file:
-                reader = csv.reader(file)
-                ######################## l_1 alpha_1 ############################
-                blank = next(reader)
-                l1 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_1 = average_time / num_trials
-                #expected_cycle_time_l1 = math.log(float(l1[0])) / (2 * math.log(float(l1[2])))
-                expected_cycle_time_l1 = math.log(n_) / (2 * math.log(float(l1[2])))
+def main(n_, l_i, p_i, lambda__, mu_, num_trials, num_ells):
+        num_trials = num_trials
+        numbers = []
+        labels = []
+        colors = []
+        with open(f"bfs_data_.csv", mode='r', newline='', encoding='utf-8') as file:
+                for i in range(num_ells):
+                        reader = csv.reader(file)
+                        blank = next(reader)
+                        average_time = 0
+                        for _ in range(num_trials):
+                                row=next(reader)
+                                average_time += int(row[1])
+                        t_i = average_time / num_trials
+                        t_i = t_i / math.log(l_i)
+                        numbers.append(t_i)
+                        constant_time =  1 / (2 * math.log(mu_))
+                        numbers.append(constant_time)
 
-                '''
-                ######################## l_1 alpha_2 ############################
-                blank = next(reader)
-                l2 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_2 = average_time / num_trials
-                expected_cycle_time_l2 = math.log(float(l2[0])) / (2 * math.log(float(l2[2])))
-                
-                ######################## l_1 alpha_3 ############################
-                blank = next(reader)
-                l3 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_3 = average_time / num_trials
-                expected_cycle_time_l3 = math.log(float(l3[0])) / (2 * math.log(float(l3[2])))
-                print(expected_cycle_time_l3)
-                '''
-
-                labels = ['t_1', 'expected_t_1']
-                numbers = [t_1, expected_cycle_time_l1]
-                plt.bar(labels, numbers, color=['skyblue', 'salmon', 'skyblue', 'salmon', 'skyblue', 'salmon'])
-                plt.title("Average Time of First Cycle ")
-                plt.ylabel('time')
-                plt.savefig("l_1")
-                plt.clf()
-                
-        with open('bfs_data_l_2.csv', mode='r', newline='', encoding='utf-8') as file:
-                reader = csv.reader(file)
-                ######################## l_2 alpha_1 ############################
-                blank = next(reader)
-                l1 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_1 = average_time / num_trials
-                #expected_cycle_time_l1 = math.log(float(l1[0])) / (2 * math.log(float(l1[2])))
-                expected_cycle_time_l1 = math.log(n_) / (2 * math.log(float(l1[2])))
-                
-                '''
-                ######################## l_2 alpha_2 ############################
-                blank = next(reader)
-                l2 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_2 = average_time / num_trials
-                expected_cycle_time_l2 = math.log(float(l2[0])) / (2 * math.log(float(l2[2])))
-
-                ######################## l_2 alpha_3 ############################
-                blank = next(reader)
-                l3 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_3 = average_time / num_trials
-                expected_cycle_time_l3 = math.log(float(l3[0])) / (2 * math.log(float(l3[2])))
-                print(expected_cycle_time_l3)
-                '''
-
-                labels = ['t_1', 'expected_t_1']
-                numbers = [t_1, expected_cycle_time_l1]
-                plt.bar(labels, numbers, color=['skyblue', 'salmon', 'skyblue', 'salmon', 'skyblue', 'salmon'])
-                plt.title("Average Time of First Cycle ")
-                plt.ylabel('time')
-                plt.savefig("l_2")
-                plt.clf()
-                
-
-        with open('bfs_data_l_3.csv', mode='r', newline='', encoding='utf-8') as file:
-                reader = csv.reader(file)
-                ######################## l_3 alpha_1 ############################
-                blank = next(reader)
-                l1 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_1 = average_time / num_trials
-                #expected_cycle_time_l1 = math.log(float(l1[0])) / (2 * math.log(float(l1[2])))
-                expected_cycle_time_l1 = math.log(n_) / (2 * math.log(float(l1[2])))
-
-                '''
-                ######################## l_3 alpha_2 ############################
-                blank = next(reader)
-                l2 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_2 = average_time / num_trials
-                expected_cycle_time_l2 = math.log(float(l2[0])) / (2 * math.log(float(l2[2])))
-
-                ######################## l_3 alpha_3 ############################
-                blank = next(reader)
-                l3 = next(reader)
-                blank = next(reader)
-                average_time = 0
-                for _ in range(num_trials):
-                        row=next(reader)
-                        average_time += int(row[8])
-                t_3 = average_time / num_trials
-                expected_cycle_time_l3 = math.log(float(l3[0])) / (2 * math.log(float(l3[2])))
-                print(expected_cycle_time_l3)
-                '''
-
-                labels = ['t_1', 'expected_t_1']
-                numbers = [t_1, expected_cycle_time_l1]
-                plt.bar(labels, numbers, color=['skyblue', 'salmon', 'skyblue', 'salmon', 'skyblue', 'salmon'])
-                plt.title("Average Time of First Cycle ")
-                plt.ylabel('time')
-                plt.savefig("l_3")
-                plt.clf()
+        for i in range(1,num_ells + 1):
+                labels.append(str("t_" + str(i)))
+                labels.append(str("e_" + str(i)))
+                colors.append('skyblue')
+                colors.append('salmon')
+        
+        plt.bar(labels, numbers, color=colors)
+        plt.title("Average Time of First Cycle ")
+        plt.ylabel('time')
+        plt.savefig("first_cycle_time")
+        plt.clf()
+        
+        
                 
 if __name__ == "__main__":
         main(20)         
@@ -165,3 +85,5 @@ if __name__ == "__main__":
 
 #print("average path length: ", average_path_len / 29)
 #print("average shortcuts:", average_shortcuts/29)
+
+'''
