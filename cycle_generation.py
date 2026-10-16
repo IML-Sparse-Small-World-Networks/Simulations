@@ -1,0 +1,55 @@
+from collections import deque
+import numpy as np
+import math
+
+r = np.random.default_rng(seed=123)
+
+def bfs(G, n_, l_, p_, lambda_, start=0):
+    n = n_
+    visited = [False] * n
+    parent = [-1] * n
+    depth = [0] * n
+    visited[start] = True
+    queue = deque([start])
+    discovered = 1
+
+    while queue:
+        u = queue.popleft()
+        G[u].add((u-1)%n)
+        G[u].add((u+1)%n)
+        for i in range(int((-1 * l_) + u), int(l_ + 1 + u)):
+            if abs(i) <= 1:
+                continue
+            if r.random() < p_:
+                G[u].add(i)
+
+
+        for v in G[u]:
+            if visited[v]:
+                if v != parent[u]:
+                    return depth[u] + 1, discovered   # cycle found
+            else:
+                visited[v] = True
+                parent[v] = u
+                depth[v] = depth[u] + 1
+                discovered += 1
+                queue.append(v)
+    return max(depth), discovered    
+
+def main():
+    start = 0
+    n = 10
+    lambda_ = 1/4
+    G = [{0}]
+
+    p = (lambda_ / (2*n - 2))
+
+
+
+    l = n**2 / math.log(n)
+
+    graph = bfs(G,n,l,p,lambda_, start)
+    print(graph)
+
+if __name__ == "__main__":
+        main()
