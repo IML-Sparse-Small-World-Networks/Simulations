@@ -13,16 +13,36 @@ def bfs(G, n_, l_, p_, lambda_, start=0):
     queue = deque([start])
     discovered = 1
 
+    expanded = set()
+    L = min(math.floor(l_), n // 2)
+
     while queue:
         u = queue.popleft()
-        G[u].add((u-1)%n)
-        G[u].add((u+1)%n)
-        for i in range(-1 * l_, l_ + 1):
-            if math.abs(l_) <= 1:
-                continue
-            if r.random() < p_:
-                G[u].add(i)
-                
+
+        # Create the cycle neighbors if they do not exist yet.
+        for v in ((u - 1) % n, (u + 1) % n):
+            G.setdefault(v, set())  # Preserve existing edges.
+            G[u].add(v)
+            G[v].add(u)
+
+        # Generate shortcuts incident to u.
+        for distance in range(2, L + 1):
+            # A set avoids sampling the opposite vertex twice when n is even.
+            candidates = {(u - distance) % n, (u + distance) % n}
+
+            for v in candidates:
+                if v in expanded:
+                    # This edge was already sampled when v was processed.
+                    continue
+
+                if r.random() < p_:
+                    # Create the shortcut endpoint only if the edge exists.
+                    G.setdefault(v, set())
+                    G[u].add(v)
+                    G[v].add(u)
+
+        expanded.add(u)
+
 
         for v in G[u]:
             if visited[v]:
@@ -36,7 +56,16 @@ def bfs(G, n_, l_, p_, lambda_, start=0):
                 queue.append(v)
     return max(depth), discovered    
 
-def main(G, n_, l_, p_, lambda_, start=0):
-    G = [{0}]
+def main():
+    start = 0
+    n = 10
+    lambda_ = 1/4
+    G = {start: set()}
+    p = (lambda_ / (2*n - 2))
+    l = n**2 / math.log(n)
 
-    p = (lambda_ / (2*n_ - 2))
+    graph = bfs(G,n,l,p,lambda_, start)
+    print(graph)
+
+if __name__ == "__main__":
+        main()
