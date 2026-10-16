@@ -21,7 +21,7 @@ def bfs(G, n_, l_, p_, lambda_, start=0):
             if math.abs(l_) <= 1:
                 continue
             if r.random() < p_:
-                G[u].add(l_)
+                G[u].add(i)
                 
 
         for v in G[u]:
@@ -36,7 +36,7 @@ def bfs(G, n_, l_, p_, lambda_, start=0):
                 queue.append(v)
     return max(depth), discovered    
 
-def main(n_, l_, lambda_):
+def main(G, n_, l_, p_, lambda_, start=0):
     G = [{0}]
 
     p = (lambda_ / (2*n_ - 2))
