@@ -1,6 +1,9 @@
 from collections import deque
 import numpy as np
 import math
+import networkx as nx
+import matplotlib.pyplot as plt
+
 
 r = np.random.default_rng(seed=123)
 
@@ -56,16 +59,54 @@ def bfs(G, n_, l_, p_, lambda_, start=0):
                 queue.append(v)
     return max(depth), discovered    
 
+def draw_graph(G, n):
+    H = nx.Graph()
+    H.add_nodes_from(G)
+
+    for u, neighbors in G.items():
+        for v in neighbors:
+            H.add_edge(u, v)
+
+    # Keep each vertex at its position on the original cycle.
+    pos = {
+        u: (math.cos(2 * math.pi * u / n),
+            math.sin(2 * math.pi * u / n))
+        for u in H.nodes()
+    }
+
+    edge_colors = [
+        "gray" if (u - v) % n in (1, n - 1) else "red"
+        for u, v in H.edges()
+    ]
+
+    plt.figure(figsize=(8, 8))
+    nx.draw_networkx(
+        H,
+        pos=pos,
+        with_labels=True,
+        node_color="lightblue",
+        node_size=600,
+        edge_color=edge_colors,
+        width=2,
+        font_size=11,
+    )
+    plt.title("Generated graph — cycle edges: gray; shortcuts: red")
+    plt.axis("equal")
+    plt.axis("off")
+    plt.tight_layout()
+    plt.show()
+
 def main():
     start = 0
-    n = 10
+    n = 50 + 50
     lambda_ = 1/4
     G = {start: set()}
-    p = (lambda_ / (2*n - 2))
+    p = (lambda_ / (2*n - 2)) * 2
     l = n / math.log(n)
 
-    graph = bfs(G,n,l,p,lambda_, start)
-    print(graph)
+    result = bfs(G, n, l, p, lambda_, start)
+    print(result)
+    draw_graph(G, n)
 
 if __name__ == "__main__":
         main()
