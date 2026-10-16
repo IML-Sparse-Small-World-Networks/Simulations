@@ -14,7 +14,7 @@ def bfs(G, n_, l_, p_, lambda_, start=0):
     discovered = 1
 
     expanded = set()
-    L = min(math.floor(l_), n // 2)
+    L = int(l_)
 
     while queue:
         u = queue.popleft()
@@ -62,7 +62,7 @@ def main():
     lambda_ = 1/4
     G = {start: set()}
     p = (lambda_ / (2*n - 2))
-    l = n**2 / math.log(n)
+    l = n / math.log(n)
 
     graph = bfs(G,n,l,p,lambda_, start)
     print(graph)
