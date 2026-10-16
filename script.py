@@ -18,7 +18,7 @@ def main(mu_, lambda__):
     expected = 1 / (2 * math.log(mu_))
 
     plt.plot(ns, sample, 'o-', label='mean depth / log(l)')
-    plt.axhline(expected, color='salmon', linestyle='--', label='1 / (2 log mu)')
+    plt.axhline(expected, color='salmon', linestyle='--', label='log(l) / (2 log(mu))')
     plt.xlabel('n')
     plt.ylabel('time / log(l)')
     plt.title('Average Time First Cycle | mu = ' + str(mu_) + ' | lambda = ' + str(lambda__))

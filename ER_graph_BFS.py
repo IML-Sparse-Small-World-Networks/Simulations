@@ -47,14 +47,15 @@ if __name__ == "__main__":
     
     lambda__ = 4                                                                     # new lambda var for alpha
     mu_ = (1 + lambda__ + math.sqrt((lambda__**2) + (6 * lambda__) + 1) ) /2         # eigenvalue of growth matrix
-    num_trials =  15                        # number trials
+    num_trials =  20                        # number trials
     count = 1
     num_ells = 45
+    n_ = 350000                             # 350,000 vertices
     with open(f"bfs_data_.csv", mode='w', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
-        writer.writerow(["n", "l", "time"])
+        writer.writerow(["n", "l", "time", "lambda"])
         for i in range(1, num_ells+1):
-            n_ = 7500 * (i)
+            
             l_i = (n_)**(1/10)
             p_i = lambda__/(2*l_i - 2)
             
