@@ -1,0 +1,36 @@
+{
+  "n": 200000,
+  "ell": 16385,
+  "p": 7.62939453125e-06,
+  "eligible_shortcut_pairs": 3276800000,
+  "expected_shortcut_degree": 0.25,
+  "weight_model": "exponential",
+  "rate": 1.0,
+  "x": 0,
+  "distances": [
+    10,
+    12,
+    20,
+    50,
+    100,
+    447,
+    20000,
+    50000,
+    100000
+  ],
+  "trials_per_distance": 20,
+  "sampling_mode": "shared_graph",
+  "seed": 42,
+  "seed_recipe": "np.random.default_rng(np.random.SeedSequence([seed, trial, stream]))",
+  "seed_stream": "cyclic distance for independent_pairs; 0 for shared_graph",
+  "trial_numbering": "1-based",
+  "versions": {
+    "python": "3.12.14",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "graphs_generated": 20,
+  "simulation_seconds": 0.9718244809999987,
+  "total_generation_seconds": 0.26661344600006487,
+  "total_dijkstra_seconds": 0.6869906910000054
+}
