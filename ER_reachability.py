@@ -3,9 +3,11 @@ import numpy as np
 import math
 import networkx as nx
 import matplotlib.pyplot as plt
+import secrets
 
+num = secrets.randbelow(999999)
 
-r = np.random.default_rng(seed=123)
+r = np.random.default_rng(seed=num)
 
 def bfs(G, n_, l_, p_, lambda_, start=0):
     n = n_
