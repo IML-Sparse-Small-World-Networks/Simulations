@@ -87,7 +87,7 @@ def draw_graph(G, n):
         pos=pos,
         with_labels=True,
         node_color="lightblue",
-        node_size=600,
+        node_size=200,
         edge_color=edge_colors,
         width=2,
         font_size=11,
@@ -100,7 +100,7 @@ def draw_graph(G, n):
 
 def main():
     start = 0
-    n = 50 + 50
+    n = 100000
     lambda_ = 1/4
     G = {start: set()}
     p = (lambda_ / (2*n - 2)) * 2
@@ -108,7 +108,7 @@ def main():
 
     result = bfs(G, n, l, p, lambda_, start)
     print(result)
-    draw_graph(G, n)
+    #draw_graph(G, n)
 
 if __name__ == "__main__":
         main()
