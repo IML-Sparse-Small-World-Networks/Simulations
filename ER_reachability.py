@@ -100,7 +100,7 @@ def draw_graph(G, n):
 
 def main():
     start = 0
-    n = 100000
+    n = 100
     lambda_ = 1/4
     G = {start: set()}
     p = (lambda_ / (2*n - 2)) * 2
@@ -108,7 +108,7 @@ def main():
 
     result = bfs(G, n, l, p, lambda_, start)
     print(result)
-    #draw_graph(G, n)
+    draw_graph(G, n)
 
 if __name__ == "__main__":
         main()
